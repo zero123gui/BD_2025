@@ -11,13 +11,13 @@ public class ConsultarFaturasFornecedor {
     private ConsultaSQL consultaSQL;
     private Connection conn; // Conexão compartilhada
 
-    public ConsultarFaturasFornecedor(Connection conn) {//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    public ConsultarFaturasFornecedor(Connection conn) {
         this.conn = conn; // Usa a conexão recebida pelo construtor
         this.scanner = new Scanner(System.in);
         this.consultaSQL = new ConsultaSQL(conn);
     }
 
-    public void listarFornecedores() {//aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    public void listarFornecedores() {
         // Consulta SQL com joins para obter todos os dados necessários
         String sql = """
             SELECT 
@@ -82,42 +82,43 @@ public class ConsultarFaturasFornecedor {
     
     public void listarFaturas(){
         System.out.print("Entre com o id do Fornecedor: ");
-        int idFornecedor = scanner.nextInt();
+        int idFornecedor = scanner.nextInt();//recebe o id do Fornecedor que se deseja verificar os dados
         try {
             String nomeFornecedor = consultaSQL.getNomeFornecedor(idFornecedor);
             if (nomeFornecedor == null) {
                 System.out.println("Fornecedor não encontrado.");
                 return;
             }
+            consultaSQL.getDadosFornecedor(idFornecedor);//imprime os dados do fornecedor
     
-            ResultSet resultSet = consultaSQL.getFaturasFornecedor(idFornecedor);
+            ResultSet resultSet = consultaSQL.getFaturasFornecedor(idFornecedor);//retorna as faturas associadas ao fornecedor
             System.out.println("Faturas do Fornecedor " + nomeFornecedor + ":");
-            System.out.println(" ____________________________________________________________________________________");
-            System.out.println("| Nro Fatura |  Motivo Fatura  | Data Vencimento | Valor Fatura |  Saldo Fornecedor  |");
-            System.out.println("|------------|-----------------|-----------------|--------------|--------------------|");
-    
-            boolean temExames = false;
-            while (resultSet.next()) {
-                temExames = true;
-                int nroFatura = resultSet.getInt("nroFatura");
-                String dtExame = resultSet.getString("dtExame");
-                String idTipoExame = resultSet.getString("idTipoExame");
-                String tipoExame = resultSet.getString("tipo");
-                String resultadoGeral = resultSet.getString("resultado");
-                String obsExame = resultSet.getString("observacoes");
+            System.out.println(" _________________________________________________________________________________________");
+            System.out.println("| Nro Fatura |  Motivo Fatura        | Data Vencimento | Valor Fatura  | Saldo Fornecedor |");
+            System.out.println("|------------|-----------------------|-----------------|---------------|------------------|");
 
-                System.out.println(String.format("| %-9d | %-10s | 0%-2s: %-22s | %-15s | %-45s |",
-                nroFatura, dtExame, idTipoExame, tipoExame, resultadoGeral, obsExame));
+
+            boolean temFatura = false;
+            while (resultSet.next()) {
+                temFatura = true;
+                int nroFatura = resultSet.getInt("nroFatura");
+                String motivoFatura = resultSet.getString("motivoFatura");
+                String dtVencimento = resultSet.getString("dtVencimento");
+                double valorFatura = resultSet.getDouble("valorFatura");
+                double saldo = resultSet.getDouble("saldo");
+
+                System.out.println(String.format("| %-10d | %-21s | %-15s | %-13.2f | %-16.2f |",
+                    nroFatura, motivoFatura, dtVencimento, valorFatura, saldo));
+            }
+
+            if (!temFatura) {
+                System.out.println("| Não há faturas registradas para este Fornecedor.                                 |");
             }
     
-            if (!temExames) {
-                System.out.println("| Não há exames registrados para este Fornecedor.                               |");
-            }
-    
-            System.out.println("|________________________________________________________________________________________________________________________|");
+            System.out.println("|__________________________________________________________________________________|");
     
         } catch (SQLException e) {
-            System.err.println("Erro ao listar histórico de exames do Fornecedor: " + e.getMessage());
+            System.err.println("Erro ao listar histórico de faturas do Fornecedor: " + e.getMessage());
         }
     }
 
@@ -126,7 +127,7 @@ public class ConsultarFaturasFornecedor {
         do {
             System.out.println("===== Menu de consulta de Fornecedores =====");
             System.out.println("1. Listar todos os Fornecedores.");
-            System.out.println("2. Verificar as faturas de um Fornecedor.");
+            System.out.println("2. Lista as faturas de um Fornecedor.");
             System.out.println("3. Voltar ao menu principal.");
             System.out.print("Escolha uma opcao: ");
 
@@ -143,8 +144,8 @@ public class ConsultarFaturasFornecedor {
 
     public static void main(String[] args) {
         try (Connection conn = Conexao.getConnection()) {
-            ConsultarFaturasFornecedor consultarPaciente = new ConsultarFaturasFornecedor(conn);
-            consultarPaciente.menuConsulta();
+            ConsultarFaturasFornecedor consultarFornecedor = new ConsultarFaturasFornecedor(conn);
+            consultarFornecedor.menuConsulta();
         } catch (SQLException e) {
             System.err.println("Erro na conexão com o banco de dados: " + e.getMessage());
         }

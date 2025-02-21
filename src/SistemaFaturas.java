@@ -23,19 +23,18 @@ public class SistemaFaturas {
             opcao = scanner.nextInt();
 
             switch (opcao) {
-                case 1://cadastrar fatura
+                case 1 -> //cadastrar fatura
                     System.out.println("Ainda em desenvolvimento!");
-                    break;
-                case 2://consultar fatura fornecedor
+                case 2 -> {
+                    //consultar fatura fornecedor
                     ConsultarFaturasFornecedor consultar = new ConsultarFaturasFornecedor(conn);
                     consultar.menuConsulta();
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     System.out.println("Saindo do sistema...");
                     scanner.close();
-                    break;
-                default:
-                    System.out.println("Opcao invalida. Tente novamente.");
+                }
+                default -> System.out.println("Opcao invalida. Tente novamente.");
             }
         } while (opcao != 3);
     }
