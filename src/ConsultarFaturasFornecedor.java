@@ -7,8 +7,11 @@ import java.util.Scanner;
 
 public class ConsultarFaturasFornecedor {
 
+    @SuppressWarnings("FieldMayBeFinal")
     private Scanner scanner;
+    @SuppressWarnings("FieldMayBeFinal")
     private ConsultaSQL consultaSQL;
+    @SuppressWarnings("FieldMayBeFinal")
     private Connection conn; // Conexão compartilhada
 
     public ConsultarFaturasFornecedor(Connection conn) {

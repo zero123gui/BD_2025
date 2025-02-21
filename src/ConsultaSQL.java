@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ConsultaSQL {
+    @SuppressWarnings("FieldMayBeFinal")
     private Connection conn;
 
     public ConsultaSQL(Connection conn) {
