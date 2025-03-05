@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class SistemaFaturas {
 
+    @SuppressWarnings("FieldMayBeFinal")
     private Scanner scanner;
     Connection conn = Conexao.getConnection();
 

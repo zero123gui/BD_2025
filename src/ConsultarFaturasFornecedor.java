@@ -52,7 +52,7 @@ public class ConsultarFaturasFornecedor {
             """;
     
         try (PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+            ResultSet resultSet = statement.executeQuery()) {
     
             System.out.println("===== Lista de Fornecedores =====");
     
