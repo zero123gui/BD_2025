@@ -15,17 +15,16 @@ public class Conexao {
 
     public static Connection getConnection(){
 
+        @SuppressWarnings("resource")
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("\tLista de Usuarios");
-        System.out.println("1. Usuario-Admin: postgres\n2. Usuario-Consultar: userConsultar\t3. Usuario-Inserir: userInserir");
+        System.out.println("1. Usuario-Admin: postgres\n2. Usuario-Consultar: userConsultar\n3. Usuario-Inserir: userInserir");
 
-        System.out.print("Digite o nome do usuario: ");
+        System.out.println("Digite o nome do usuario ");
         username = scanner.nextLine();
         System.err.println("Digite a senha");
         password = scanner.nextLine();
-        
-        scanner.close();
 
         try {
             if(conn == null || conn.isClosed()){

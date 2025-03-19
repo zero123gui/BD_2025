@@ -1,8 +1,11 @@
 import conexao.Conexao;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class InserirFaturasFornecedor {
@@ -40,7 +43,9 @@ public class InserirFaturasFornecedor {
             scanner.nextLine();
 
             System.out.print("Informe a data de vencimento (YYYY-MM-DD): ");
-            String dtVencimento = scanner.nextLine();
+            String dtVencimentoStr = scanner.nextLine();
+
+            Date dtVencimento = converterParaSQLDate(dtVencimentoStr);
 
             System.out.print("Informe o valor da fatura: ");
             double valorFatura = scanner.nextDouble();
@@ -53,7 +58,7 @@ public class InserirFaturasFornecedor {
             """;
 
             try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert)) {
-                insertStmt.setString(1, dtVencimento);
+                insertStmt.setDate(1, dtVencimento);
                 insertStmt.setDouble(2, valorFatura);
                 insertStmt.setInt(3, idFornecedor);
                 insertStmt.setInt(4, idMotivoFatura);
@@ -66,7 +71,7 @@ public class InserirFaturasFornecedor {
         }
     }
 
-    public void menuConsulta() {
+    public void menuInsere() {
         int opcao;
         do {
             System.out.println("===== Menu de Cadastro de Fatura =====");
@@ -84,10 +89,19 @@ public class InserirFaturasFornecedor {
         } while (opcao != 2);
     }
 
+    private Date converterParaSQLDate(String dataStr) {
+        try {
+            LocalDate localDate = LocalDate.parse(dataStr); // Converte a string para LocalDate
+            return Date.valueOf(localDate); // Converte LocalDate para java.sql.Date
+        } catch (DateTimeParseException e) {
+            return null; // Retorna null se a data for inválida
+        }
+    }
+
     public static void main(String[] args) {
         try (Connection conn = Conexao.getConnection()) {
             InserirFaturasFornecedor inserirFaturas = new InserirFaturasFornecedor(conn);
-            inserirFaturas.menuConsulta();
+            inserirFaturas.menuInsere();
         } catch (SQLException e) {
             System.err.println("Erro na conexão com o banco de dados: " + e.getMessage());
         }

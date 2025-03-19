@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class SistemaFaturas {
 
     @SuppressWarnings("FieldMayBeFinal")
-    private Scanner scanner;
     Connection conn = Conexao.getConnection();
+    private Scanner scanner;
 
     public SistemaFaturas() {
         this.scanner = new Scanner(System.in);
@@ -24,8 +24,11 @@ public class SistemaFaturas {
             opcao = scanner.nextInt();
 
             switch (opcao) {
-                case 1 -> //cadastrar fatura
+                case 1 ->{ //cadastrar fatura
+                    InserirFaturasFornecedor inserir = new InserirFaturasFornecedor(conn);
+                    inserir.menuInsere();
                     System.out.println("Ainda em desenvolvimento!");
+                }
                 case 2 -> {
                     //consultar fatura fornecedor
                     ConsultarFaturasFornecedor consultar = new ConsultarFaturasFornecedor(conn);
