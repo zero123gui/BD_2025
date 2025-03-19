@@ -9,6 +9,16 @@ public class Fornecedor {
     private String complementoCasa;
     private int nroEndereco;
 
+	public Fornecedor(int idFornecedor, String nomeFornecedor, String cnpj, double saldo, int idEndereco, String complementoCasa, int nroEndereco) {
+		this.idFornecedor = idFornecedor;
+		this.nomeFornecedor = nomeFornecedor;
+		this.cnpj = cnpj;
+		this.saldo = saldo;
+		this.idEndereco = idEndereco;
+		this.complementoCasa = complementoCasa;
+		this.nroEndereco = nroEndereco;
+	}
+
 	public int getidFornecedor() {
 		return this.idFornecedor;
 	}
