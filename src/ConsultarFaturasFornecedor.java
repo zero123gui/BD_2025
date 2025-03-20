@@ -95,7 +95,7 @@ public class ConsultarFaturasFornecedor {
             consultaSQL.getDadosFornecedor(idFornecedor);//imprime os dados do fornecedor
     
             ResultSet resultSet = consultaSQL.getFaturasFornecedor(idFornecedor);//retorna as faturas associadas ao fornecedor
-            System.out.println("Faturas do Fornecedor " + nomeFornecedor + ":");
+            System.out.println("Faturas do " + nomeFornecedor + ":");
             System.out.println(" _________________________________________________________________________________________");
             System.out.println("| Nro Fatura |    Motivo Fatura      | Data Vencimento | Valor Fatura  | Saldo Fornecedor |");
             System.out.println("|------------|-----------------------|-----------------|---------------|------------------|");
@@ -118,7 +118,7 @@ public class ConsultarFaturasFornecedor {
                 System.out.println("| Não há faturas registradas para este Fornecedor.                                 |");
             }
     
-            System.out.println("|__________________________________________________________________________________|");
+            System.out.println("|______________________________________________________________________________________|");
     
         } catch (SQLException e) {
             System.err.println("Erro ao listar histórico de faturas do Fornecedor: " + e.getMessage());
