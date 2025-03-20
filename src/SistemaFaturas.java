@@ -27,7 +27,6 @@ public class SistemaFaturas {
                 case 1 ->{ //cadastrar fatura
                     InserirFaturasFornecedor inserir = new InserirFaturasFornecedor(conn);
                     inserir.menuInsere();
-                    System.out.println("Ainda em desenvolvimento!");
                 }
                 case 2 -> {
                     //consultar fatura fornecedor

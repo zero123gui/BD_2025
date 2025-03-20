@@ -10,31 +10,8 @@ public class ConsultaSQL {
     public ConsultaSQL(Connection conn) {
         this.conn = conn;
     }
-    
-    public ResultSet getFaturasFornecedor(int idFornecedor) throws SQLException {
-        String sql = """
-            SELECT 
-                f.nroFatura,
-                mf.motivo AS motivoFatura,
-                f.dtVencimento,
-                f.valorFatura,
-                fr.saldo
-            FROM 
-                fatura f
-            JOIN 
-                motivoFatura mf ON f.idMotivoFatura = mf.idMotivoFatura
-            JOIN 
-                fornecedor fr ON f.idFornecedor = fr.idFornecedor
-            WHERE 
-                f.idFornecedor = ?
-            """;
-    
-        PreparedStatement statement = conn.prepareStatement(sql);
-        statement.setInt(1, idFornecedor);
-        return statement.executeQuery();
-    }
 
-    public void getDadosFornecedor(int idFornecedor) throws SQLException{
+    public ResultSet getDadosFornecedor() throws SQLException{
         String sql = """
             SELECT 
                 f.idFornecedor, 
@@ -63,33 +40,31 @@ public class ConsultaSQL {
             JOIN 
                 emailfornecedor ef ON ef.idFornecedor = f.idFornecedor
             """;
-            try (PreparedStatement statement = conn.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            return statement.executeQuery();
+    }
     
-                System.out.println("===== Dados do Fornecedor com id: "+ idFornecedor +" =====");
-
-                // Recupera os dados do ResultSet
-                String nomeFornecedor = resultSet.getString("nomeFornecedor");
-                String cnpj = resultSet.getString("cnpj");
-                String complementoEndereco = resultSet.getString("complementoEndereco");
-                String cep = resultSet.getString("cep");
-                String bairro = resultSet.getString("nomeBairro");
-                String logradouro = resultSet.getString("nomeLogradouro");
-                String cidade = resultSet.getString("nomeCidade");
-                String nroTelefone = resultSet.getString("nroTelefone");
-                String email = resultSet.getString("email");
+    public ResultSet getFaturasFornecedor(int idFornecedor) throws SQLException {
+        String sql = """
+            SELECT 
+                f.nroFatura,
+                mf.motivo AS motivoFatura,
+                f.dtVencimento,
+                f.valorFatura,
+                fr.saldo
+            FROM 
+                fatura f
+            JOIN 
+                motivoFatura mf ON f.idMotivoFatura = mf.idMotivoFatura
+            JOIN 
+                fornecedor fr ON f.idFornecedor = fr.idFornecedor
+            WHERE 
+                f.idFornecedor = ?
+            """;
     
-                // Exibe os dados recuperados
-                System.out.println("Nome: " + nomeFornecedor);
-                System.out.println("CNPJ: " + cnpj);
-                System.out.println("Endereço: " + logradouro + ", " + bairro + ", " + cidade + ", CEP: " + cep + " (" + complementoEndereco + ")");
-                System.out.println("Fones:"+ nroTelefone);
-                System.out.println("Emails:"+ email);
-                System.out.println("- - - - - - - - - - - - - - - - - - - ");
-                
-            } catch (SQLException e) {
-                System.err.println("Erro ao listar Fornecedor: " + e.getMessage());
-            }
+        PreparedStatement statement = conn.prepareStatement(sql);
+        statement.setInt(1, idFornecedor);
+        return statement.executeQuery();
     }
 
     public String getNomeFornecedor(int idFornecedor) throws SQLException {

@@ -21,39 +21,8 @@ public class ConsultarFaturasFornecedor {
     }
 
     public void listarFornecedores() {
-        // Consulta SQL com joins para obter todos os dados necessários
-        String sql = """
-            SELECT 
-                f.idFornecedor, 
-                f.nomeFornecedor,
-                f.cnpj, 
-                f.idEndereco, 
-                f.complementoEndereco,
-                e.cep, 
-                b.nomeBairro, 
-                l.nomeLogradouro, 
-                c.nomeCidade,
-                tf.nroTelefone,
-                ef.email
-            FROM 
-                fornecedor f
-            JOIN 
-                endereco e ON e.idEndereco = f.idEndereco
-            JOIN 
-                cidade c ON c.idCidade = e.idCidade
-            JOIN 
-                bairro b ON b.idBairro = e.idBairro
-            JOIN 
-                logradouro l ON l.idLogradouro = e.idLogradouro
-            JOIN 
-                telefonefornecedor tf ON tf.idFornecedor = f.idFornecedor
-            JOIN 
-                emailfornecedor ef ON ef.idFornecedor = f.idFornecedor
-            """;
-    
-        try (PreparedStatement statement = conn.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery()) {
-    
+        try {
+            ResultSet resultSet = consultaSQL.getDadosFornecedor();
             System.out.println("===== Lista de Fornecedores =====");
     
             while (resultSet.next()) {
@@ -92,8 +61,7 @@ public class ConsultarFaturasFornecedor {
                 System.out.println("Fornecedor não encontrado.");
                 return;
             }
-            consultaSQL.getDadosFornecedor(idFornecedor);//imprime os dados do fornecedor
-    
+
             ResultSet resultSet = consultaSQL.getFaturasFornecedor(idFornecedor);//retorna as faturas associadas ao fornecedor
             System.out.println("Faturas do Fornecedor " + nomeFornecedor + ":");
             System.out.println(" _________________________________________________________________________________________");
