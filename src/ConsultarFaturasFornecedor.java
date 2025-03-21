@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+@SuppressWarnings("unused")
 public class ConsultarFaturasFornecedor {
 
     @SuppressWarnings("FieldMayBeFinal")
@@ -18,6 +19,7 @@ public class ConsultarFaturasFornecedor {
         this.conn = conn; // Usa a conexão recebida pelo construtor
         this.scanner = new Scanner(System.in);
         this.consultaSQL = new ConsultaSQL(conn);
+        
     }
 
     public void listarFornecedores() {
