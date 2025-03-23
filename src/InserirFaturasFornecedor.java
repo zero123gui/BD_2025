@@ -117,15 +117,15 @@ public class InserirFaturasFornecedor {
                 System.out.println("Fatura cadastrada com sucesso!");
             }
 
+            System.out.println("Deseja atualizar os dados do Fornecedor");
+            System.err.println("Sim - 1\nNão - 2");
+            int op = scanner.nextInt();
+            if (op==1) {
+                atualizarDadosFornecedor(idFornecedor);
+            }
+
         } catch (SQLException e) {
             System.err.println("Erro ao cadastrar fatura: " + e.getMessage());
-        }
-
-        System.out.println("Deseja atualizar os dados do Fornecedor");
-        System.err.println("Sim - 1\nNão - 2");
-        int op = scanner.nextInt();
-        if (op==1) {
-            atualizarDadosFornecedor(idFornecedor);
         }
     }
 
