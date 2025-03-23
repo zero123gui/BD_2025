@@ -19,17 +19,43 @@ public class InserirFaturasFornecedor {
         this.scanner = new Scanner(System.in);
     }
 
+    @SuppressWarnings("UnnecessaryReturnStatement")
     public void atualizarDadosFornecedor(int idF){
-        try {
-            System.out.println("Digite o novo nome");
-            String nomeFornecedor = scanner.nextLine();
+        System.out.print("Digite o Nro do Endereço: ");
+        String nroEndereco = scanner.nextLine();
+        scanner.nextLine(); // Limpa buffer caso tenha usado nextInt() antes
+        
+        System.out.print("\nDigite o complemento: ");
+        String complementoEndereco = scanner.nextLine();
 
-            String sql = "UPDATE fornecedor SET nomeFornecedor = ? WHERE idFornecedor = ?";
-            PreparedStatement stmt = conn.prepareStatement("UPDATE fornecedor SET nomeFornecedor = ? WHERE idFornecedor = ?");
+            String sqlUpdateFornecedor = "UPDATE fornecedor SET nroendereco = ?, complementoendereco = ? WHERE idFornecedor = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(sqlUpdateFornecedor)) {
+                stmt.setString(1, nroEndereco);
+                stmt.setString(2, complementoEndereco);
+                stmt.setInt(3, idF); // Certifique-se de que idFornecedor tem um valor válido
+                stmt.executeUpdate();
+                System.out.println("Endereço atualizado com sucesso!");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
+            System.out.println("1 - Transação OK\n2 - Transação Incompleta\n3 - Rollback");
+            int op = scanner.nextInt();
+            if(op == 1){
+                try{
+                    conn.commit();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            } else if (op == 2){
+                return;
+            } else if(op == 3){
+                try {
+                    conn.rollback();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
     }
 
     public void cadastrarFaturaFornecedor(){
@@ -72,12 +98,22 @@ public class InserirFaturasFornecedor {
                 VALUES (CURRENT_DATE, ?, ?, ?, ?)
             """;
 
-            try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert)) {
+            String sqlUpdate = """
+                UPDATE fornecedor SET saldo = saldo + ? WHERE idFornecedor = ?           
+            """;
+
+            try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert);
+                    PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate)) {
+
                 insertStmt.setDate(1, dtVencimento);
                 insertStmt.setDouble(2, valorFatura);
                 insertStmt.setInt(3, idFornecedor);
                 insertStmt.setInt(4, idMotivoFatura);
                 insertStmt.executeUpdate();
+
+                updateStmt.setDouble(1, valorFatura);
+                updateStmt.setInt(2, idFornecedor);
+                updateStmt.executeUpdate();
                 System.out.println("Fatura cadastrada com sucesso!");
             }
 
@@ -85,16 +121,11 @@ public class InserirFaturasFornecedor {
             System.err.println("Erro ao cadastrar fatura: " + e.getMessage());
         }
 
-        System.out.println("Deseja atualizar o nome do Fornecedor");
+        System.out.println("Deseja atualizar os dados do Fornecedor");
         System.err.println("Sim - 1\nNão - 2");
         int op = scanner.nextInt();
         if (op==1) {
             atualizarDadosFornecedor(idFornecedor);
-        }
-        try {
-            conn.commit();
-        } catch (SQLException e) {
-            System.out.println(e);
         }
     }
 
