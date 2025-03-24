@@ -1,5 +1,6 @@
 import conexao.Conexao;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class SistemaFaturas {
@@ -24,12 +25,11 @@ public class SistemaFaturas {
             opcao = scanner.nextInt();
 
             switch (opcao) {
-                case 1 ->{ //cadastrar fatura
+                case 1 ->{
                     InserirFaturasFornecedor inserir = new InserirFaturasFornecedor(conn);
                     inserir.menuInsere();
                 }
                 case 2 -> {
-                    //consultar fatura fornecedor
                     ConsultarFaturasFornecedor consultar = new ConsultarFaturasFornecedor(conn);
                     consultar.menuConsulta();
                 }
@@ -40,6 +40,11 @@ public class SistemaFaturas {
                 default -> System.out.println("Opcao invalida. Tente novamente.");
             }
         } while (opcao != 3);
+        try{
+            conn.close();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

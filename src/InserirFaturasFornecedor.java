@@ -63,21 +63,9 @@ public class InserirFaturasFornecedor {
         System.out.println("Informe o id do fornecedor");
         int idFornecedor = scanner.nextInt();
         scanner.nextLine();//limpa buffer
-
-        String sqlCheckFornecedor = "SELECT nomeFornecedor from fornecedor WHERE idFornecedor = ?";
         
-        try(PreparedStatement checkStmt = conn.prepareStatement(sqlCheckFornecedor)){
+        try{
             conn.setAutoCommit(false);
-            checkStmt.setInt(1, idFornecedor);
-            ResultSet rs = checkStmt.executeQuery();
-
-            if(!rs.next()){
-                System.out.println("Fornecedor não encontrado.");
-                return;
-            }
-
-            String nomeFornecedor = rs.getString("nomeFornecedor");
-            System.out.println("Fornecedor: " + nomeFornecedor);
 
             System.out.print("Informe o ID do Motivo da Fatura: ");
             int idMotivoFatura = scanner.nextInt();
@@ -103,7 +91,7 @@ public class InserirFaturasFornecedor {
             """;
 
             try (PreparedStatement insertStmt = conn.prepareStatement(sqlInsert);
-                    PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate)) {
+                PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate)) {
 
                 insertStmt.setDate(1, dtVencimento);
                 insertStmt.setDouble(2, valorFatura);
@@ -122,6 +110,8 @@ public class InserirFaturasFornecedor {
             int op = scanner.nextInt();
             if (op==1) {
                 atualizarDadosFornecedor(idFornecedor);
+            } else {
+                conn.commit();
             }
 
         } catch (SQLException e) {
